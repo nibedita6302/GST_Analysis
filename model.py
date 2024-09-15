@@ -5,24 +5,23 @@ from Utils import pre_processing as pp
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, log_loss
 
+#C:\Users\Ashis Sardar\Desktop\GST Hack\Test_20\Test_20\Test_20\X_Test_Data_Input.csv
+#C:\Users\Ashis Sardar\Desktop\GST Hack\Test_20\Test_20\Test_20\Y_Test_Data_Target.csv
+
 def model_test(X_test_path, Y_test_path):
     # Load test data
     X_test = pd.read_csv(X_test_path)
     Y_test = pd.read_csv(Y_test_path)
 
     df_merged = pd.merge(X_test, Y_test, on='ID') # Merge X and Y on Column ID
-
     df_cleaned_test = pp.data_fillna(df_merged) # pre-processing and return the test data
 
     # Seperate X and Y from dataframe
     X_test_cleaned = df_cleaned_test.iloc[:,1:-1].values # All columns except ID 
-    Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column
-    
-    scaler = joblib.load('StandardScaler.joblib')
-    X_test_cleaned = scaler.transform(X_test_cleaned) # Standardization of X
+    Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column    
 
     # Load saved Logistic Regression Model
-    model = joblib.load("logistic_regression_parameterized_v1.joblib")
+    model = joblib.load("logistic_regression_parameterized_v1o2.joblib")
     
     # Predict on the test set
     y_pred = model.predict(X_test_cleaned) # Prediction (0 or 1)
@@ -40,15 +39,16 @@ def model_test(X_test_path, Y_test_path):
     print(f"Log Loss: {logloss}")
     
     choice = int(input('''Do you want to save the predictions?
-                   0 -> No / 1-> Yes: '''))
+                        0 -> No / 1-> Yes: '''))
     if choice==1:
+        fileName = input("Input File Name:")
         # Get ID
         ID = df_cleaned_test.iloc[:,0:1].values
         # Stack them horizontally to create a (10, 3) array
         combined_arr = np.column_stack((ID,Y_test_cleaned, y_pred, y_proba))
 
         # Save the combined array as a CSV file
-        np.savetxt('saved_prediction.csv', combined_arr, delimiter=',', fmt='%s,%d,%d,%.4f,%.4f', \
+        np.savetxt(fileName, combined_arr, delimiter=',', fmt='%s,%d,%d,%.4f,%.4f', \
                     header='ID,Y_True,Y_Prediction,0_Probability,1_Probability', comments='')
         return 'Executed & Saved'
     return 'Only Executed'
