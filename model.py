@@ -1,9 +1,13 @@
+
 import pandas as pd
 import numpy as np
 import joblib
 from Utils import pre_processing as pp
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, log_loss
+
+#C:\Users\Ashis Sardar\Desktop\GST Hack\Test_20\Test_20\Test_20\X_Test_Data_Input.csv
+#C:\Users\Ashis Sardar\Desktop\GST Hack\Test_20\Test_20\Test_20\Y_Test_Data_Target.csv
 
 def model_test(X_test_path, Y_test_path):
     # Load test data
@@ -18,11 +22,12 @@ def model_test(X_test_path, Y_test_path):
     X_test_cleaned = df_cleaned_test.iloc[:,1:-1].values # All columns except ID 
     Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column
     
-    scaler = joblib.load('StandardScaler.joblib')
-    X_test_cleaned = scaler.transform(X_test_cleaned) # Standardization of X
+    # scaler = joblib.load('StandardScaler_v1.joblib')
+    # X_test_cleaned = scaler.transform(X_test_cleaned) # Standardization of X
+    
 
     # Load saved Logistic Regression Model
-    model = joblib.load("logistic_regression_parameterized_v1.joblib")
+    model = joblib.load("logistic_regression_parameterized_v1o2.joblib")
     
     # Predict on the test set
     y_pred = model.predict(X_test_cleaned) # Prediction (0 or 1)
@@ -42,13 +47,14 @@ def model_test(X_test_path, Y_test_path):
     choice = int(input('''Do you want to save the predictions?
                    0 -> No / 1-> Yes: '''))
     if choice==1:
+        fileName = input("Input File Name:")
         # Get ID
         ID = df_cleaned_test.iloc[:,0:1].values
         # Stack them horizontally to create a (10, 3) array
         combined_arr = np.column_stack((ID,Y_test_cleaned, y_pred, y_proba))
 
         # Save the combined array as a CSV file
-        np.savetxt('saved_prediction.csv', combined_arr, delimiter=',', fmt='%s,%d,%d,%.4f,%.4f', \
+        np.savetxt(fileName, combined_arr, delimiter=',', fmt='%s,%d,%d,%.4f,%.4f', \
                     header='ID,Y_True,Y_Prediction,0_Probability,1_Probability', comments='')
         return 'Executed & Saved'
     return 'Only Executed'
