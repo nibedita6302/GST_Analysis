@@ -1,4 +1,3 @@
-
 import pandas as pd
 import numpy as np
 import joblib
@@ -15,16 +14,11 @@ def model_test(X_test_path, Y_test_path):
     Y_test = pd.read_csv(Y_test_path)
 
     df_merged = pd.merge(X_test, Y_test, on='ID') # Merge X and Y on Column ID
-
     df_cleaned_test = pp.data_fillna(df_merged) # pre-processing and return the test data
 
     # Seperate X and Y from dataframe
     X_test_cleaned = df_cleaned_test.iloc[:,1:-1].values # All columns except ID 
-    Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column
-    
-    # scaler = joblib.load('StandardScaler_v1.joblib')
-    # X_test_cleaned = scaler.transform(X_test_cleaned) # Standardization of X
-    
+    Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column    
 
     # Load saved Logistic Regression Model
     model = joblib.load("logistic_regression_parameterized_v1o2.joblib")
@@ -45,7 +39,7 @@ def model_test(X_test_path, Y_test_path):
     print(f"Log Loss: {logloss}")
     
     choice = int(input('''Do you want to save the predictions?
-                   0 -> No / 1-> Yes: '''))
+                        0 -> No / 1-> Yes: '''))
     if choice==1:
         fileName = input("Input File Name:")
         # Get ID
