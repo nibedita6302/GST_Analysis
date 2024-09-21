@@ -21,7 +21,7 @@ def model_test(X_test_path, Y_test_path):
     Y_test_cleaned = df_cleaned_test.iloc[:,-1].values # Only Target Column    
 
     # Load saved Logistic Regression Model
-    model = joblib.load("logistic_regression_parameterized_v1o2.joblib")
+    model = joblib.load("logistic_regression_parameterized_v1o3o1.joblib")
     
     # Predict on the test set
     y_pred = model.predict(X_test_cleaned) # Prediction (0 or 1)
