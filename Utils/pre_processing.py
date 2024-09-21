@@ -2,7 +2,7 @@ import pandas as pd
 
 def data_fillna(df_merged):
    
-      # Fill NaN values in Column6, Column8 & Column15 with their median
+    # Fill NaN values in Column6, Column8 & Column15 with their median
     df_merged['Column6'] = df_merged['Column6'].fillna(df_merged['Column6'].median()) 
     df_merged['Column8'] = df_merged['Column8'].fillna(df_merged['Column8'].median())
     df_merged['Column15'] = df_merged['Column15'].fillna(df_merged['Column15'].median())
@@ -24,22 +24,14 @@ def data_fillna(df_merged):
     
     # Fill NaN values in Column0 with its median
     df_merged['Column0'] = df_merged['Column0'].fillna(df_merged['Column0'].median())
-    
-    # Save the cleaned dataframe to a CSV file
-    # df_merged.to_csv(output_path, index=False)
-    
+        
     df_merged = df_merged.drop(['Column9'],axis=1) # Drop Column 9
     
     # Return the pre-processed data
     return df_merged
 
-# Example usage:
-# data_fillna('Train_60/Train_60/Train_60/X_Train_Data_Input.csv', 'X_NA_cleaned.csv')
 
-def remove_outliers(merged_data_path, output_path):
-    # Read the input CSV files
-    df_merged = pd.read_csv(merged_data_path)
-    
+def remove_outliers(df_merged):    
     # Remove rows with 4 or more NaN values
     df_cleaned = df_merged.dropna(thresh=df_merged.shape[1] - 4 + 1)
     
@@ -51,9 +43,8 @@ def remove_outliers(merged_data_path, output_path):
     pure_mean = df_cleaned[df_cleaned['Column14'] > -200]['Column14'].mean()
     df_cleaned.loc[df_cleaned['Column14'] < -200, 'Column14'] = pure_mean
     
-    # Save the cleaned dataframe to a CSV file
-    df_cleaned.to_csv(output_path, index=False)
-    return 
+    # Return clean data
+    return df_cleaned
 
 def testing(df):
 	print('Hello')
