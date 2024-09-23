@@ -37,7 +37,7 @@ python model.py
 ```
 python hyperparameter_tuning.py
 ```
-> [!Important]  
+> [!Tip]  
 > Use the new model saved to predict test data.
 ------
 #### Hackathon Team Members:
